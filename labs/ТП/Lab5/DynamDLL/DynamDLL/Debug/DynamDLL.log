@@ -1,0 +1,5 @@
+﻿  Dynam.cpp
+d:\documents\1курс\2курс\тп\lab5\dynamdll\dynamdll\dynam.cpp(9): warning C4018: <: несоответствие типов со знаком и без знака
+     Создается библиотека D:\Documents\1курс\2курс\ТП\Lab5\DynamDLL\Debug\DynamDLL.lib и объект D:\Documents\1курс\2курс\ТП\Lab5\DynamDLL\Debug\DynamDLL.exp
+  DynamDLL.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab5\DynamDLL\Debug\DynamDLL.dll
+  DynamDLL.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab5\DynamDLL\Debug\DynamDLL.pdb (Partial PDB)

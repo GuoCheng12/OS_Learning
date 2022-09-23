@@ -1,0 +1,5 @@
+﻿  Source.cpp
+d:\documents\1курс\2курс\тп\lab1\lab1\source.cpp(48): warning C4996: 'getch': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _getch. See online help for details.
+  c:\program files (x86)\windows kits\10\include\10.0.14393.0\ucrt\conio.h(452): note:  см. объявление "getch"
+  Lab1.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab1\Debug\Lab1.exe
+  Lab1.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab1\Debug\Lab1.pdb (Partial PDB)

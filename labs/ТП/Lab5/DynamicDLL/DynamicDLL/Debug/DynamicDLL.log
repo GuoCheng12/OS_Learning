@@ -1,0 +1,6 @@
+﻿  DynamicDLL.cpp
+d:\documents\1курс\2курс\тп\lab5\dynamicdll\dynamicdll\dynamicdll.cpp(13): warning C4018: <: несоответствие типов со знаком и без знака
+d:\documents\1курс\2курс\тп\lab5\dynamicdll\dynamicdll\dynamicdll.cpp(52): warning C4018: <: несоответствие типов со знаком и без знака
+     ╤ючфрхЄё  сшсышюЄхър D:\Documents\1ъєЁё\2ъєЁё\╥╧\Lab5\DynamicDLL\Debug\DynamicDLL.lib ш юс·хъЄ D:\Documents\1ъєЁё\2ъєЁё\╥╧\Lab5\DynamicDLL\Debug\DynamicDLL.exp
+  DynamicDLL.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab5\DynamicDLL\Debug\DynamicDLL.dll
+  DynamicDLL.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab5\DynamicDLL\Debug\DynamicDLL.pdb (Partial PDB)

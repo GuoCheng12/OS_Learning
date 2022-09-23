@@ -1,0 +1,5 @@
+﻿  Source.cpp
+d:\documents\1курс\2курс\тп\neyavn\neyavn\source.cpp(13): warning C4018: <: несоответствие типов со знаком и без знака
+     Создается библиотека D:\Documents\1курс\2курс\ТП\Neyavn\Debug\Neyavn.lib и объект D:\Documents\1курс\2курс\ТП\Neyavn\Debug\Neyavn.exp
+  Neyavn.vcxproj -> D:\Documents\1курс\2курс\ТП\Neyavn\Debug\Neyavn.dll
+  Neyavn.vcxproj -> D:\Documents\1курс\2курс\ТП\Neyavn\Debug\Neyavn.pdb (Partial PDB)

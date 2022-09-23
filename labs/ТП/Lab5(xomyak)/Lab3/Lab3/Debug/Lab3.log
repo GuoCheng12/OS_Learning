@@ -1,0 +1,7 @@
+﻿  Source.cpp
+d:\documents\1курс\2курс\тп\lab3\lab3\lab3\source.cpp(63): warning C4101: hOldBrush: неиспользованная локальная переменная
+d:\documents\1курс\2курс\тп\lab3\lab3\lab3\source.cpp(92): warning C4715: Wnd3Proc: значение возвращается не при всех путях выполнения
+d:\documents\1курс\2курс\тп\lab3\lab3\lab3\source.cpp(188): warning C4715: WndProc: значение возвращается не при всех путях выполнения
+d:\documents\1курс\2курс\тп\lab3\lab3\lab3\source.cpp(58): warning C4715: Wnd2Proc: значение возвращается не при всех путях выполнения
+  Lab3.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab3\Lab3\Debug\Lab3.exe
+  Lab3.vcxproj -> D:\Documents\1курс\2курс\ТП\Lab3\Lab3\Debug\Lab3.pdb (Partial PDB)

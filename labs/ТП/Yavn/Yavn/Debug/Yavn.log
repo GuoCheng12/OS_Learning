@@ -1,0 +1,5 @@
+﻿  Source.cpp
+d:\documents\1курс\2курс\тп\yavn\yavn\source.cpp(14): warning C4018: <: несоответствие типов со знаком и без знака
+     Создается библиотека D:\Documents\1курс\2курс\ТП\Yavn\Debug\Yavn.lib и объект D:\Documents\1курс\2курс\ТП\Yavn\Debug\Yavn.exp
+  Yavn.vcxproj -> D:\Documents\1курс\2курс\ТП\Yavn\Debug\Yavn.dll
+  Yavn.vcxproj -> D:\Documents\1курс\2курс\ТП\Yavn\Debug\Yavn.pdb (Partial PDB)

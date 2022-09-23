@@ -1,0 +1,6 @@
+﻿  Source.cpp
+d:\documents\1курс\2курс\тп\lab4(2)\lab4(2)\source.cpp(281): warning C4018: <: несоответствие типов со знаком и без знака
+d:\documents\1курс\2курс\тп\lab4(2)\lab4(2)\source.cpp(116): warning C4715: WndProc: значение возвращается не при всех путях выполнения
+d:\documents\1курс\2курс\тп\lab4(2)\lab4(2)\source.cpp(55): warning C4715: Wnd2Proc: значение возвращается не при всех путях выполнения
+  Lab4(2).vcxproj -> D:\Documents\1курс\2курс\ТП\Lab4(2)\Debug\Lab4(2).exe
+  Lab4(2).vcxproj -> D:\Documents\1курс\2курс\ТП\Lab4(2)\Debug\Lab4(2).pdb (Partial PDB)
