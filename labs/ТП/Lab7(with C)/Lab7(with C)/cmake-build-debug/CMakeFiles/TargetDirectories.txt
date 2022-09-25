@@ -1,3 +1,0 @@
-/Users/wuguocheng/Desktop/gitlib/OS/labs/ТП/Lab7(with C)/Lab7(with C)/cmake-build-debug/CMakeFiles/Lab7_with_C_.dir
-/Users/wuguocheng/Desktop/gitlib/OS/labs/ТП/Lab7(with C)/Lab7(with C)/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/wuguocheng/Desktop/gitlib/OS/labs/ТП/Lab7(with C)/Lab7(with C)/cmake-build-debug/CMakeFiles/rebuild_cache.dir
