@@ -4,39 +4,41 @@
 
 #ifndef TEST1_OBJECTPOOL_H
 #define TEST1_OBJECTPOOL_H
-#include <iostream>
+
+#include "Common.h"
 
 template<class T>
-class ObjectPool{
+class ObjectPool {
 public:
     //开辟新的Object
-    T* New(){
-                                //  使用还回来的memoryspace来补充
-        T* object = nullptr;
-        if(memoryListforfree){
-            void *next = *(void**)object; // 指向下个内存块的指针
-             object = memoryListforfree;
-             memoryListforfree = next;
+    T *New() {
+        //  使用还回来的memoryspace来补充
+        T *object = nullptr;
+        if (memoryListforfree) {
+            void *next = *(void **) object; // 指向下个内存块的指针
+            object = memoryListforfree;
+            memoryListforfree = next;
             return object;
-        }else{
-            if(leftMemory < sizeof(T)){
+        } else {
+            if (leftMemory < sizeof(T)) {
                 leftMemory = 128 * 1024;
-                memoryPool = (char*)malloc(leftMemory);
-                if(memoryPool == nullptr){
+                memoryPool = (char *) malloc(leftMemory);
+                if (memoryPool == nullptr) {
                     throw std::bad_alloc();
                 }
             }
-            object = (T*)memoryPool;
+            object = (T *) memoryPool;
             // 防止出现64bits下出现的报错
-            size_t objSize = sizeof(T) < sizeof(void*) ? sizeof(void*) : sizeof(T);
+            size_t objSize = sizeof(T) < sizeof(void *) ? sizeof(void *) : sizeof(T);
             memoryPool += objSize;
             leftMemory -= sizeof(T);
         }
         new(object)T; // 初始化
         return object;
     }
+
     //删除对象
-    void Delete(T* obj){
+    void Delete(T *obj) {
         //  if(memoryListforfree == nullptr) { // 第一次分配
         //      memoryListforfree = obj;
         //      *(void **) obj = nullptr; // 32/64bits 下操作系统，都可适用这样分配前四/八个字节
@@ -47,14 +49,14 @@ public:
 
         //显示调用
         obj->~T();
-        *(void **)obj = memoryListforfree;
+        *(void **) obj = memoryListforfree;
         memoryListforfree = obj;
     }
 
 private:
-    void* memoryListforfree = nullptr;
+    void *memoryListforfree = nullptr;
     size_t leftMemory = 0;
-    char* memoryPool = nullptr; // 定长内存 内存池
+    char *memoryPool = nullptr; // 定长内存 内存池
 };
 
 #endif //TEST1_OBJECTPOOL_H

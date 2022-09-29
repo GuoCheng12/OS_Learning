@@ -52,6 +52,12 @@ build CMakeFiles/test1.dir/main.cpp.o: CXX_COMPILER__test1_Debug /Users/wuguoche
   OBJECT_DIR = CMakeFiles/test1.dir
   OBJECT_FILE_DIR = CMakeFiles/test1.dir
 
+build CMakeFiles/test1.dir/ThreadCache.cpp.o: CXX_COMPILER__test1_Debug /Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/ThreadCache.cpp || cmake_object_order_depends_target_test1
+  DEP_FILE = CMakeFiles/test1.dir/ThreadCache.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk -std=gnu++14
+  OBJECT_DIR = CMakeFiles/test1.dir
+  OBJECT_FILE_DIR = CMakeFiles/test1.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target test1
@@ -60,7 +66,7 @@ build CMakeFiles/test1.dir/main.cpp.o: CXX_COMPILER__test1_Debug /Users/wuguoche
 #############################################
 # Link the executable test1
 
-build test1: CXX_EXECUTABLE_LINKER__test1_Debug CMakeFiles/test1.dir/main.cpp.o
+build test1: CXX_EXECUTABLE_LINKER__test1_Debug CMakeFiles/test1.dir/main.cpp.o CMakeFiles/test1.dir/ThreadCache.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.3.sdk
   OBJECT_DIR = CMakeFiles/test1.dir
   POST_BUILD = :
