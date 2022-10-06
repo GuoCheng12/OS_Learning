@@ -1,7 +1,0 @@
-# ninja log v5
-1	270	1664346690677847451	CMakeFiles/test1.dir/main.cpp.o	c2e892087b44dc4a
-270	297	1664346690706959366	test1	733155c6e8b1aa8e
-1	450	1664457005920305856	CMakeFiles/test1.dir/main.cpp.o	c2e892087b44dc4a
-3	450	1664457005921313735	CMakeFiles/test1.dir/ThreadCache.cpp.o	81f1522b9ea609d9
-1	277	1664457123320332593	CMakeFiles/test1.dir/main.cpp.o	c2e892087b44dc4a
-1	280	1664457123324216359	CMakeFiles/test1.dir/ThreadCache.cpp.o	81f1522b9ea609d9

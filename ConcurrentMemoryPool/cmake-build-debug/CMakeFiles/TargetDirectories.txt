@@ -1,3 +1,0 @@
-/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug/CMakeFiles/test1.dir
-/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug/CMakeFiles/rebuild_cache.dir
