@@ -26,7 +26,20 @@
 
 要加上互斥(mutual exclusion) 且 互斥应该只关注到临界区（critical section 不然有可能会造成死锁）
 
+## 3.Philosophers 哲学家问题
 
+> **Broken Solution:**
+>
+> We attempt our ﬁrst solution to the problem. Assume we initialize
+> each semaphore (in the forks array) to a value of 1. Assume also that
+> each philosopher knows its own number (p). We can thus write the
+> get forks() and put forks() routine (Figure 31.15, page 15).
+>
+> it will happen —— **deadlock**
+
+> If each philosopher happens to grab the fork
+> on their left before any philosopher can grab the fork on their right, each
+> will be stuck holding one fork and waiting for another, forever.
 
 
 
