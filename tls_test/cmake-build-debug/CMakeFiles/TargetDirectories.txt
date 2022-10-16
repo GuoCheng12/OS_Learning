@@ -1,0 +1,3 @@
+/Users/wuguocheng/CLionProjects/tls_test/cmake-build-debug/CMakeFiles/tls_test.dir
+/Users/wuguocheng/CLionProjects/tls_test/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/wuguocheng/CLionProjects/tls_test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
