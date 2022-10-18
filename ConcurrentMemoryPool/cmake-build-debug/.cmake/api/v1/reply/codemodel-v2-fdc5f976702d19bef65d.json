@@ -49,8 +49,8 @@
 	"kind" : "codemodel",
 	"paths" : 
 	{
-		"build" : "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug",
-		"source" : "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool"
+		"build" : "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool/cmake-build-debug",
+		"source" : "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool"
 	},
 	"version" : 
 	{

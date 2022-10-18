@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug"
+			"value" : "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -515,7 +515,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool"
+			"value" : "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool"
 		},
 		{
 			"name" : "CMAKE_INSTALL_NAME_TOOL",
@@ -1087,7 +1087,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug"
+			"value" : "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool/cmake-build-debug"
 		},
 		{
 			"name" : "test1_IS_TOP_LEVEL",
@@ -1111,7 +1111,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool"
+			"value" : "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool"
 		}
 	],
 	"kind" : "cache",
