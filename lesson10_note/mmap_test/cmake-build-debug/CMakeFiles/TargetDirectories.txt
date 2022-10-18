@@ -1,0 +1,3 @@
+/Users/wuguocheng/CLionProjects/mmap_test/cmake-build-debug/CMakeFiles/mmap_test.dir
+/Users/wuguocheng/CLionProjects/mmap_test/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/wuguocheng/CLionProjects/mmap_test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
