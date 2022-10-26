@@ -4,14 +4,14 @@
 
 #pragma once
 #include "ThreadCache.hpp"
-void* ConcurrentAlloc(size_t size){
+static void* ConcurrentAlloc(size_t size){
     if(pTLSThreadCache == nullptr){
         pTLSThreadCache = new ThreadCache;
     }
-    std::cout  << ":" <<pTLSThreadCache << std::endl;
+    std::cout  << pthread_self() <<  ":" <<pTLSThreadCache << std::endl;
     return pTLSThreadCache->allocate(size);
 }
-void ConcurrentFree(void* ptr){
+static void ConcurrentFree(void* ptr){
 
 }
 

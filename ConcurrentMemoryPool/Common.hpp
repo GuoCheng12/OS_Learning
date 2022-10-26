@@ -6,13 +6,24 @@
 
 #include <iostream>
 #include <pthread.h>
+#include <unistd.h>
+#include <sys/syscall.h>
+#include <mutex>
 static const size_t MAX_BYTES = 256 * 1024;
 static const size_t NFREELISTS = 208; // 桶数
+#ifdef __APPLE__
+    typedef unsigned long long PAGE_ID;
+#endif
+#ifdef _WIN64
+    typedef unsigned long long PAGE_ID;
+#elif _WIN32
+    typedef size_t PAGE_ID;
+#endif // _win32
 
-inline void *&NextObj(void *obj) {
-    return *(void **) obj;
+inline static void *&NextObj(void *obj) {
+    return *(void **) obj; // 取头部四/八个字节
 }
-
+// freelist 在central cache和 thread cache 都需要使用
 class FreeList {
 public:
     // 头插
@@ -51,7 +62,7 @@ public:
     //[64*1024+1,256*1024]  8*1024byte对齐 freelist[184,208)
 
     // 向下/上补齐
-    static size_t _RoundUp(size_t bytes, size_t align) {
+    static inline size_t _RoundUp(size_t bytes, size_t align) {
         size_t alignSize;
         if (bytes % align != 0) {
             alignSize = (bytes / align + 1) * (align);
@@ -61,9 +72,8 @@ public:
         }
         //return (((bytes)+align - 1) & ~(align - 1));
     }
-
     // 计算对齐
-    static size_t RoundUp(size_t bytes) {
+    static inline size_t RoundUp(size_t bytes) {
         if (bytes <= 128) {
             return _RoundUp(bytes, 8);
         } else if (bytes <= 1024) {
@@ -79,8 +89,13 @@ public:
         }
     }
 
-    static size_t _Index(size_t bytes, size_t align_shift) {
+    static inline size_t _Index(size_t bytes, size_t align_shift) {
         return ((bytes + (1 << bytes) - 1) >> align_shift) - 1;
+//        if(bytes % align_shift == 0){
+//            return bytes / align_shift - 1;
+//        }else{
+//            return bytes / align_shift;
+//        }
     }
 
     // 计算映射的是哪一个桶的index
@@ -104,4 +119,46 @@ public:
         return -1;
     }
 };
+// 管理多个连续页大块内存管理使用
+struct Span{
+    PAGE_ID _pageId = 0; // 大块内存起始页的页号
+    size_t  _n = 0;  // 页的数量
 
+    Span* _next = nullptr; // 双向链表的结构
+    Span* _prev = nullptr;
+    size_t _useCount = 0; // 切好小块内存，被分配给thread cache的计数
+    void* _freeList = nullptr; // 切好的小块内存的自由链表
+};
+
+class SpanList{
+public:
+    SpanList()
+    {
+        _head = new Span;
+        _head->_next = _head;
+        _head->_prev = _head;
+    }
+    // 头插
+    void Insert(Span* pos,Span* newSpan){
+        assert(pos);
+        assert(newSpan);
+
+        Span* prev = pos->_prev;
+        prev->_next = newSpan;
+        newSpan->_prev = prev;
+        newSpan->_next = pos;
+        pos->_prev = newSpan;
+    }
+    void Erase(Span* pos){
+        assert(pos);
+        assert(pos != _head);
+        Span* prev = pos->_prev;
+        Span* next = pos->_next;
+
+        prev->_next = next;
+        next->_prev = prev;
+    }
+private:
+    Span* _head;
+    std::mutex _mtx;
+};

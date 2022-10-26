@@ -1,4 +1,4 @@
-# Install script for directory: /Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool
+# Install script for directory: /Users/wuguocheng/CLionProjects/ConcurrentMemoryPool
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/wuguocheng/Desktop/gitlib/OS_Learning/ConcurrentMemoryPool/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/wuguocheng/CLionProjects/ConcurrentMemoryPool/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
