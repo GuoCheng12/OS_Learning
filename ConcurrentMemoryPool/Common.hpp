@@ -9,8 +9,11 @@
 #include <unistd.h>
 #include <sys/syscall.h>
 #include <mutex>
+#include <algorithm>
 static const size_t MAX_BYTES = 256 * 1024;
 static const size_t NFREELISTS = 208; // 桶数
+static const size_t NPAGES = 128;
+static const size_t PAGE_SHIFT = 13;
 #ifdef __APPLE__
     typedef unsigned long long PAGE_ID;
 #endif
@@ -33,7 +36,10 @@ public:
         _freeList = obj;
         ++_size;
     }
-
+    void PushRange(void* start,void* end){
+        NextObj(end) = _freeList;
+        _freeList = start;
+    }
     // 头删
     void* Pop() {
         assert(_freeList);
@@ -45,6 +51,9 @@ public:
 
     bool Empty(){
         return _freeList == nullptr;
+    }
+    size_t& MaxSize(){
+        return maxSize;
     }
 
 private:
@@ -118,13 +127,38 @@ public:
         }
         return -1;
     }
+    // 控制一下CentralCache给ThreadCache的空间大小分配
+    // [2,512) 一次批量移动多少个对象（慢启动）上限值
+    // 小对象一次批量上限高
+    // 小对象一次批量上限低
+    static size_t NumMoveSize(size_t size){
+        assert(size > 0);
+        int num = MAX_BYTES / size;
+        if(num < 2){
+            num = 2;
+        }
+        if(num > 512){
+            num = 512;
+        }
+        return num;
+    }
+    static size_t NumMovePage(size_t size){
+        assert(size > 0);
+        size_t num = NumMoveSize(size);
+        size_t npage = num * size;
+        npage >>= PAGE_SHIFT; // 右移动13位  和PAGE的转化
+        if(npage == 0){
+            npage = 1;
+        }
+        return npage;
+    }
 };
 // 管理多个连续页大块内存管理使用
 struct Span{
     PAGE_ID _pageId = 0; // 大块内存起始页的页号
     size_t  _n = 0;  // 页的数量
 
-    Span* _next = nullptr; // 双向链表的结构
+    Span* _next = nullptr; // 双向链表的结构 带头双向循环
     Span* _prev = nullptr;
     size_t _useCount = 0; // 切好小块内存，被分配给thread cache的计数
     void* _freeList = nullptr; // 切好的小块内存的自由链表
@@ -132,11 +166,21 @@ struct Span{
 
 class SpanList{
 public:
+    std::mutex _mtx;
     SpanList()
     {
         _head = new Span;
         _head->_next = _head;
         _head->_prev = _head;
+    }
+    Span* begin(){
+        return _head->_next;
+    }
+    Span* end(){
+        return _head;
+    }
+    void PushFront(Span* span){
+        Insert(begin(),span);
     }
     // 头插
     void Insert(Span* pos,Span* newSpan){
@@ -158,7 +202,7 @@ public:
         prev->_next = next;
         next->_prev = prev;
     }
+
 private:
     Span* _head;
-    std::mutex _mtx;
 };

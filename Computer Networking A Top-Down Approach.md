@@ -15,9 +15,9 @@
 <img src="/Users/wuguocheng/Library/Application Support/typora-user-images/image-20221018002335234.png" alt="image-20221018002335234" style="zoom:30%;" />
 
 1. The HTTP client process initiates a TCP connection to the server
-  www.someSchool.edu on port number 80, which is the default port number
-  for HTTP. Associated with the TCP connection, there will be a socket at the
-  client and a socket at the server.
+    www.someSchool.edu on port number 80, which is the default port number
+    for HTTP. Associated with the TCP connection, there will be a socket at the
+    client and a socket at the server.
 
 HTTP客户端进程在端口号80上启动到服务器www.someschool.edu的TCP连接，端口号80是HTTP的默认端口号。 与TCP连接相关联的是，客户端和服务器端各有一个套接字。
 
@@ -103,18 +103,18 @@ suppose a browser is requesting the object http://www.someschool.edu/
 campus.gif. Here is what happens:
 
 1. The browser establishes a TCP connection to the Web cache and sends an HTTP
-  request for the object to the Web cache.
+    request for the object to the Web cache.
 
 2. The Web cache checks to see if it has a copy of the object stored locally. If it
-  does, the Web cache returns the object within an HTTP response message to the
-  client browser.
+    does, the Web cache returns the object within an HTTP response message to the
+    client browser.
 
 3. If the Web cache does not have the object, the Web cache opens a TCP connec-
-  tion to the origin server, that is, to www.someschool.edu. The Web cachethen sends an HTTP request for the object into the cache-to-server TCP connection. After receiving this request, the origin server sends the object within an HTTP response to the Web cache.
+    tion to the origin server, that is, to www.someschool.edu. The Web cachethen sends an HTTP request for the object into the cache-to-server TCP connection. After receiving this request, the origin server sends the object within an HTTP response to the Web cache.
 
   4. When the Web cache receives the object, it stores a copy in its local storage and
-  sends a copy, within an HTTP response message, to the client browser (over the
-  existing TCP connection between the client browser and the Web cache).
+    sends a copy, within an HTTP response message, to the client browser (over the
+    existing TCP connection between the client browser and the Web cache).
 
   
 
@@ -124,5 +124,16 @@ campus.gif. Here is what happens:
 
 
 
-### The Conditional GET
+### The Conditional GET 
 
+## 2.3 Electronic Mail in the Internet
+
+<img src="/Users/wuguocheng/Library/Application Support/typora-user-images/image-20221027234024885.png" alt="image-20221027234024885" style="zoom:50%;" />
+
+<img src="/Users/wuguocheng/Library/Application Support/typora-user-images/image-20221027234116299.png" alt="image-20221027234116299" style="zoom:50%;" />
+
+### 2.3.1 SMTP
+
+<img src="/Users/wuguocheng/Library/Application Support/typora-user-images/image-20221028190920545.png" alt="image-20221028190920545" style="zoom:50%;" />
+
+<img src="/Users/wuguocheng/Library/Application Support/typora-user-images/image-20221028191419886.png" alt="image-20221028191419886" style="zoom:50%;" />
