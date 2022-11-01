@@ -10,22 +10,35 @@
 #include <sys/syscall.h>
 #include <mutex>
 #include <algorithm>
+#include <sys/mman.h>
+
 static const size_t MAX_BYTES = 256 * 1024;
 static const size_t NFREELISTS = 208; // 桶数
-static const size_t NPAGES = 128;
+static const size_t NPAGES = 129;
 static const size_t PAGE_SHIFT = 13;
 #ifdef __APPLE__
-    typedef unsigned long long PAGE_ID;
+typedef unsigned long long PAGE_ID;
 #endif
 #ifdef _WIN64
-    typedef unsigned long long PAGE_ID;
+typedef unsigned long long PAGE_ID;
 #elif _WIN32
-    typedef size_t PAGE_ID;
+typedef size_t PAGE_ID;
 #endif // _win32
 
 inline static void *&NextObj(void *obj) {
     return *(void **) obj; // 取头部四/八个字节
 }
+
+inline static void *SystemAlloc(size_t kpage) {
+    void *ptr = mmap(NULL, kpage << 13, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (ptr == MAP_FAILED) {
+        perror("map mem error\n");
+        ptr = nullptr;
+        exit(-2);
+    }
+    return ptr;
+}
+
 // freelist 在central cache和 thread cache 都需要使用
 class FreeList {
 public:
@@ -36,12 +49,14 @@ public:
         _freeList = obj;
         ++_size;
     }
-    void PushRange(void* start,void* end){
+
+    void PushRange(void *start, void *end) {
         NextObj(end) = _freeList;
         _freeList = start;
     }
+
     // 头删
-    void* Pop() {
+    void *Pop() {
         assert(_freeList);
         void *obj = _freeList;
         _freeList = NextObj(obj);
@@ -49,10 +64,11 @@ public:
         return obj;
     }
 
-    bool Empty(){
+    bool Empty() {
         return _freeList == nullptr;
     }
-    size_t& MaxSize(){
+
+    size_t &MaxSize() {
         return maxSize;
     }
 
@@ -81,6 +97,7 @@ public:
         }
         //return (((bytes)+align - 1) & ~(align - 1));
     }
+
     // 计算对齐
     static inline size_t RoundUp(size_t bytes) {
         if (bytes <= 128) {
@@ -99,7 +116,7 @@ public:
     }
 
     static inline size_t _Index(size_t bytes, size_t align_shift) {
-        return ((bytes + (1 << bytes) - 1) >> align_shift) - 1;
+        return ((bytes + (1 << align_shift) - 1) >> align_shift) - 1;
 //        if(bytes % align_shift == 0){
 //            return bytes / align_shift - 1;
 //        }else{
@@ -121,88 +138,106 @@ public:
             return _Index(bytes - 8 * 1024, 10) + grop_array[0] + grop_array[1] + grop_array[2];
         } else if (bytes <= 256 * 1024) {
             return _Index(bytes - 64 * 1024, 13) + grop_array[0] + grop_array[1] + grop_array[2] + grop_array[3];
-        } else{
+        } else {
             std::cerr << "something wrong.." << std::endl;
             exit(-1);
         }
         return -1;
     }
+
     // 控制一下CentralCache给ThreadCache的空间大小分配
     // [2,512) 一次批量移动多少个对象（慢启动）上限值
     // 小对象一次批量上限高
     // 小对象一次批量上限低
-    static size_t NumMoveSize(size_t size){
+    static size_t NumMoveSize(size_t size) {
         assert(size > 0);
         int num = MAX_BYTES / size;
-        if(num < 2){
+        if (num < 2) {
             num = 2;
         }
-        if(num > 512){
+        if (num > 512) {
             num = 512;
         }
         return num;
     }
-    static size_t NumMovePage(size_t size){
+
+    static size_t NumMovePage(size_t size) {
         assert(size > 0);
         size_t num = NumMoveSize(size);
         size_t npage = num * size;
         npage >>= PAGE_SHIFT; // 右移动13位  和PAGE的转化
-        if(npage == 0){
+        if (npage == 0) {
             npage = 1;
         }
         return npage;
     }
 };
-// 管理多个连续页大块内存管理使用
-struct Span{
-    PAGE_ID _pageId = 0; // 大块内存起始页的页号
-    size_t  _n = 0;  // 页的数量
 
-    Span* _next = nullptr; // 双向链表的结构 带头双向循环
-    Span* _prev = nullptr;
+// 管理多个连续页大块内存管理使用
+struct Span {
+    PAGE_ID _pageId = 0; // 大块内存起始页的页号
+    size_t _n = 0;  // 页的数量
+
+    Span *_next = nullptr; // 双向链表的结构 带头双向循环
+    Span *_prev = nullptr;
     size_t _useCount = 0; // 切好小块内存，被分配给thread cache的计数
-    void* _freeList = nullptr; // 切好的小块内存的自由链表
+    void *_freeList = nullptr; // 切好的小块内存的自由链表
 };
 
-class SpanList{
+class SpanList {
 public:
     std::mutex _mtx;
-    SpanList()
-    {
+
+    SpanList() {
         _head = new Span;
         _head->_next = _head;
         _head->_prev = _head;
     }
-    Span* begin(){
+
+    Span *begin() {
         return _head->_next;
     }
-    Span* end(){
+
+    Span *end() {
         return _head;
     }
-    void PushFront(Span* span){
-        Insert(begin(),span);
+
+    bool Empty() {
+        return _head->_next == _head;
     }
+
+    void PushFront(Span *span) {
+        Insert(begin(), span);
+    }
+
+    Span *PopFront() {
+        Span *front = _head->_next;
+        Erase(front);
+        return front;
+    }
+
     // 头插
-    void Insert(Span* pos,Span* newSpan){
+    void Insert(Span *pos, Span *newSpan) {
         assert(pos);
         assert(newSpan);
 
-        Span* prev = pos->_prev;
+        Span *prev = pos->_prev;
         prev->_next = newSpan;
         newSpan->_prev = prev;
         newSpan->_next = pos;
         pos->_prev = newSpan;
     }
-    void Erase(Span* pos){
+
+    void Erase(Span *pos) {
         assert(pos);
         assert(pos != _head);
-        Span* prev = pos->_prev;
-        Span* next = pos->_next;
+        Span *prev = pos->_prev;
+        Span *next = pos->_next;
 
         prev->_next = next;
         next->_prev = prev;
     }
 
 private:
-    Span* _head;
+    Span *_head;
 };
