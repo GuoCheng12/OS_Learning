@@ -14,6 +14,8 @@ public:
 
     // 从中心缓存获取对象
     void *FetchFromCentralCache(size_t index, size_t size);
+    //释放内存对象时，链表过长时，回收内存回到Central Cache
+    static void ListTooLong(FreeList &list, size_t size);
 
 private:
     // 哈希桶

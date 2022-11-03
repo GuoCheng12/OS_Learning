@@ -11,6 +11,7 @@
 #include <mutex>
 #include <algorithm>
 #include <sys/mman.h>
+#include <unordered_map>
 
 static const size_t MAX_BYTES = 256 * 1024;
 static const size_t NFREELISTS = 208; // 桶数
@@ -50,9 +51,21 @@ public:
         ++_size;
     }
 
-    void PushRange(void *start, void *end) {
+    void PushRange(void *start, void *end, size_t n) {
         NextObj(end) = _freeList;
         _freeList = start;
+        _size += n;
+    }
+
+    void PopRange(void *&start, void *&end, size_t n) {
+        assert(n >= _size);
+        start = _freeList;
+        for (size_t i = 0; i < n - 1; ++i) {
+            end = NextObj(end);
+        }
+        _freeList = NextObj(end);
+        NextObj(end) = nullptr;
+        _size -= n;
     }
 
     // 头删
@@ -70,6 +83,10 @@ public:
 
     size_t &MaxSize() {
         return maxSize;
+    }
+
+    size_t Size() {
+        return _size;
     }
 
 private:

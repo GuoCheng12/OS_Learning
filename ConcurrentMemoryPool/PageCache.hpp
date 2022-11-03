@@ -18,6 +18,10 @@ public:
         return &_sInstan;
     }
 
+    Span *MapObjectToSpan(void *obj);
+
+    void ReleaseSpanToPageCache(Span *span);
+
     std::mutex pagelock;
 
     // 获取一个K页的Span
@@ -26,7 +30,7 @@ public:
 private:
     SpanList _spanLists[NPAGES];
     // 最好别使用桶锁，因为桶锁锁住单个index并不能解决问题(如果此时多个线程访问大内存块span进行拆解？）
-
+    std::unordered_map<PAGE_ID, Span *> _idSpanMap;
 
     PageCache() {}
 

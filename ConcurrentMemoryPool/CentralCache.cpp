@@ -26,6 +26,7 @@ size_t CentralCache::FetchRangeObj(void *&start, void *&end, size_t batchNum, si
     }
     span->_freeList = NextObj(end);
     NextObj(end) = nullptr;
+    span->_useCount += actualNum;
     _spanList[index]._mtx.unlock();
     return actualNum;
 }
@@ -68,4 +69,32 @@ Span *CentralCache::GetOneSpan(SpanList &list, size_t byte_size) {
     list._mtx.lock();
     list.PushFront(span);
     return span;
+}
+
+void CentralCache::ReleaseListToSpans(void *start, size_t size) {
+    size_t index = Sizeclass::Index(size);
+    _spanList[index]._mtx.lock();
+    while (start != nullptr) {
+        void *next = NextObj(start);
+        //找到对应的span
+        Span *span = PageCache::GetInstance()->MapObjectToSpan(start);
+        NextObj(start) = span->_freeList;
+        span->_freeList = start;
+        span->_useCount--;
+        if(span->_useCount == 0){
+            //所有span切分出来的小块内存都回来了
+            //可以回收回page cache
+            _spanList[index].Erase(span);
+            span->_freeList = nullptr;
+            span->_next = nullptr;
+            span->_prev = nullptr;
+            _spanList[index]._mtx.unlock();
+            PageCache::GetInstance()->pagelock.lock();
+            PageCache::GetInstance()->MapObjectToSpan(span);
+            PageCache::GetInstance()->pagelock.unlock();
+            _spanList[index]._mtx.lock();
+        }
+        start = next;
+    }
+    _spanList[index]._mtx.unlock();
 }

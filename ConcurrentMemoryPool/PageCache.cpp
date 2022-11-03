@@ -28,6 +28,10 @@ Span *PageCache::NewSpan(size_t k) {
             nSpan->_pageId += k;
             nSpan->_n -= k;
             _spanLists[nSpan->_n].PushFront(nSpan);
+            // 建立id和span的映射关系,方便central cache回收小块内存时
+            for (PAGE_ID i = 0; i < kSpan->_n; ++i) {
+                _idSpanMap[kSpan->_pageId + i] = kSpan;
+            }
             return kSpan;
         }
     }
@@ -41,4 +45,14 @@ Span *PageCache::NewSpan(size_t k) {
     _spanLists[bigSpan->_n].PushFront(bigSpan);
     return NewSpan(k); // 递归去再次切割
 
+}
+
+Span *PageCache::MapObjectToSpan(void *obj) {
+    PAGE_ID id = (PAGE_ID) obj >> PAGE_SHIFT;
+    auto ret = _idSpanMap.find(id);
+    if (ret != _idSpanMap.end()) {
+        return ret->second;
+    } else {
+        assert(false);
+    }
 }

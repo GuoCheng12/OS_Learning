@@ -22,7 +22,7 @@ inline void *ThreadCache::FetchFromCentralCache(size_t index, size_t size) {
         assert(start == end);
         return start;
     } else {
-        _freeList[index].PushRange(NextObj(start), end);
+        _freeList[index].PushRange(NextObj(start), end, actualNum - 1);
         return start;
     }
 
@@ -47,4 +47,15 @@ inline void ThreadCache::deallocate(void *ptr, size_t size) {
     assert(size <= MAX_BYTES);
     size_t index = Sizeclass::Index(size);
     _freeList[index].Push(ptr); // 找出对应映射自由链表桶，
+    // 当list长度大于一次批量申请的内存时，就开始归还一段list给central cache
+    if (_freeList[index].Size() >= _freeList[index].MaxSize()) {
+        ListTooLong(_freeList[index], size);
+    }
+}
+
+inline void ThreadCache::ListTooLong(FreeList &list, size_t size) {
+    void *start = nullptr;
+    void *end = nullptr;
+    list.PopRange(start, end, list.MaxSize());
+    CentralCache::GetInStance()->ReleaseListToSpans(start, size);
 }
