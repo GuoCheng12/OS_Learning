@@ -47,6 +47,7 @@ Span *CentralCache::GetOneSpan(SpanList &list, size_t byte_size) {
     PageCache::GetInstance()->pagelock.lock();
     // 没有空闲span 需要去Page cache 中去找
     auto span = PageCache::GetInstance()->NewSpan(Sizeclass::NumMovePage(byte_size));
+    span->_isUse = true;
     PageCache::GetInstance()->pagelock.unlock();
     // 切割Span
     // 计算span的大块内存的起始地址和大块内存的大小（字节数）

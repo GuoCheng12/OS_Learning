@@ -10,7 +10,7 @@ public:
     static CentralCache *GetInStance() {
         return &_sInst;
     }
-
+    // 获取一个非空的span
     Span *GetOneSpan(SpanList &list, size_t byte_size);
 
     size_t FetchRangeObj(void *&start, void *&end, size_t batchNum, size_t size);

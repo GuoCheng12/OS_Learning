@@ -27,16 +27,19 @@ public:
     // 获取一个K页的Span
     Span *NewSpan(size_t k);
 
+    PageCache(const PageCache &) = delete;
+
 private:
     SpanList _spanLists[NPAGES];
-    // 最好别使用桶锁，因为桶锁锁住单个index并不能解决问题(如果此时多个线程访问大内存块span进行拆解？）
+
     std::unordered_map<PAGE_ID, Span *> _idSpanMap;
 
     PageCache() {}
 
-    PageCache(const PageCache &) = delete;
-
     static PageCache _sInstan;
+
+
+    // 最好别使用桶锁，因为桶锁锁住单个index并不能解决问题(如果此时多个线程访问大内存块span进行拆解？）
 };
 
 

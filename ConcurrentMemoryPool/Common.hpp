@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <sys/mman.h>
 #include <unordered_map>
+#include <sys/types.h>
 
 static const size_t MAX_BYTES = 256 * 1024;
 static const size_t NFREELISTS = 208; // 桶数
@@ -199,10 +200,12 @@ struct Span {
     Span *_prev = nullptr;
     size_t _useCount = 0; // 切好小块内存，被分配给thread cache的计数
     void *_freeList = nullptr; // 切好的小块内存的自由链表
+    bool _isUse = false; // 是否正在使用
 };
 
 class SpanList {
 public:
+    // Central Cache 和 Page Cache都需要一把Big Lock
     std::mutex _mtx;
 
     SpanList() {
@@ -233,7 +236,7 @@ public:
         return front;
     }
 
-    // 头插
+    // 插入
     void Insert(Span *pos, Span *newSpan) {
         assert(pos);
         assert(newSpan);
