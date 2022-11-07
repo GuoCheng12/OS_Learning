@@ -86,5 +86,5 @@
 > (PCB), a fancy way of talking about a C structure that contains informa-
 > tion about each process (also sometimes called a process descriptor).
 
-
+<img src="/Users/wuguocheng/Library/Application Support/typora-user-images/image-20221107145129686.png" alt="image-20221107145129686" style="zoom:40%;" />
 

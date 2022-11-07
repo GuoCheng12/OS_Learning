@@ -32,7 +32,7 @@ inline static void *&NextObj(void *obj) {
 }
 
 inline static void *SystemAlloc(size_t kpage) {
-    void *ptr = mmap(NULL, kpage << 13, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    void *ptr = mmap(nullptr, kpage << 13, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (ptr == MAP_FAILED) {
         perror("map mem error\n");
         ptr = nullptr;
@@ -40,7 +40,9 @@ inline static void *SystemAlloc(size_t kpage) {
     }
     return ptr;
 }
-
+inline static void SystemFree(void *ptr,size_t kpage){
+    munmap(ptr,kpage);
+}
 // freelist 在central cache和 thread cache 都需要使用
 class FreeList {
 public:
@@ -61,6 +63,7 @@ public:
     void PopRange(void *&start, void *&end, size_t n) {
         assert(n >= _size);
         start = _freeList;
+        end = start;
         for (size_t i = 0; i < n - 1; ++i) {
             end = NextObj(end);
         }
@@ -129,7 +132,7 @@ public:
         } else if (bytes <= 256 * 1024) {
             return _RoundUp(bytes, 8 * 1024);
         } else {
-            return -1;
+            return _RoundUp(bytes, 1 << PAGE_SHIFT);
         }
     }
 

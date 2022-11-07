@@ -7,7 +7,16 @@
 PageCache PageCache::_sInstan;
 
 Span *PageCache::NewSpan(size_t k) {
-    assert(k > 0 && k < NPAGES);
+    assert(k > 0);
+    // 大于128页的直接向堆申请
+    if (k > NPAGES - 1) {
+        void *ptr = SystemAlloc(k);
+        Span *span = new Span;
+        span->_pageId = (PAGE_ID) ptr >> PAGE_SHIFT;
+        span->_n = k;
+        _idSpanMap[span->_pageId] = span;
+        return span;
+    }
     // 先检查第k个桶里面有没有span
     if (!_spanLists[k].Empty()) {
         return _spanLists->PopFront();
@@ -62,6 +71,13 @@ Span *PageCache::MapObjectToSpan(void *obj) {
 }
 
 void PageCache::ReleaseSpanToPageCache(Span *span) {
+    // 大于128页的直接还给堆
+    if (span->_n > NPAGES - 1) {
+        void *ptr = (void *) (span->_pageId << PAGE_SHIFT);
+        SystemFree(ptr, span->_n);
+        delete span;
+        return;
+    }
     // 对span前后的页，尝试进行合并，缓解内存碎片问题
     // 往前获取span
     while (true) {
