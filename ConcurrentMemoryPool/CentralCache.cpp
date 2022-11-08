@@ -48,6 +48,7 @@ Span *CentralCache::GetOneSpan(SpanList &list, size_t byte_size) {
     // 没有空闲span 需要去Page cache 中去找
     auto span = PageCache::GetInstance()->NewSpan(Sizeclass::NumMovePage(byte_size));
     span->_isUse = true;
+    span->_objSize = byte_size;
     PageCache::GetInstance()->pagelock.unlock();
     // 切割Span
     // 计算span的大块内存的起始地址和大块内存的大小（字节数）
@@ -66,6 +67,7 @@ Span *CentralCache::GetOneSpan(SpanList &list, size_t byte_size) {
         tail = NextObj(tail);
         address += byte_size;
     }
+    NextObj(tail) = nullptr;
     // 切好
     list._mtx.lock();
     list.PushFront(span);

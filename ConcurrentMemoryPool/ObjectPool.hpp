@@ -16,14 +16,13 @@ public:
         //  使用还回来的memoryspace来补充
         T *object = nullptr;
         if (memoryListforfree) {
-            void *next = *(void **) object; // 指向下个内存块的指针
-            object = memoryListforfree;
+            object = (T *) memoryListforfree;
+            void *next = *((void **) object); // 指向下个内存块的指针
             memoryListforfree = next;
-            return object;
         } else {
             if (leftMemory < sizeof(T)) {
                 leftMemory = 128 * 1024;
-                memoryPool = (char *) malloc(leftMemory);
+                memoryPool = (char *) SystemAlloc(leftMemory >> 13); // 直接向堆上要数据
                 if (memoryPool == nullptr) {
                     throw std::bad_alloc();
                 }
@@ -32,7 +31,7 @@ public:
             // 防止出现64bits下出现的报错
             size_t objSize = sizeof(T) < sizeof(void *) ? sizeof(void *) : sizeof(T);
             memoryPool += objSize;
-            leftMemory -= sizeof(T);
+            leftMemory -= objSize;
         }
         new(object)T; // 初始化
         return object;

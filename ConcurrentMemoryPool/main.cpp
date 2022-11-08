@@ -43,25 +43,26 @@ void TestConcurrentAlloc() {
     std::cout << p3 << std::endl;
     std::cout << p4 << std::endl;
 
-    ConcurrentFree(p1, 6);
-    ConcurrentFree(p2, 8);
-    ConcurrentFree(p3, 3);
-    ConcurrentFree(p4, 2);
+    ConcurrentFree(p1);
+    ConcurrentFree(p2);
+    ConcurrentFree(p3);
+    ConcurrentFree(p4);
 }
 
 void AllocBigSize() {
     constexpr int len1 = 257 * 1024;
     void *p1 = ConcurrentAlloc(len1);
-    ConcurrentFree(p1, len1);
+    ConcurrentFree(p1);
     constexpr int len2 = 129 * 8 * 1024;
     void *p2 = ConcurrentAlloc(len2);
-    ConcurrentFree(p2, len2);
+    ConcurrentFree(p2);
 }
 
 
 int main() {
 //   pthread_t p1,p2;
-    AllocBigSize();
+    //AllocBigSize();
+    TestConcurrentAlloc();
 //    pthread_create(&p1, nullptr,Alloc1,(void*)8);
 //    pthread_create(&p2, nullptr,Alloc2,(void*)7);
 //    pthread_join(p2, nullptr);

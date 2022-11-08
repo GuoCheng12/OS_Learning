@@ -202,6 +202,7 @@ struct Span {
     Span *_next = nullptr; // 双向链表的结构 带头双向循环
     Span *_prev = nullptr;
     size_t _useCount = 0; // 切好小块内存，被分配给thread cache的计数
+    size_t _objSize = 0; // 切好的小对象的大小
     void *_freeList = nullptr; // 切好的小块内存的自由链表
     bool _isUse = false; // 是否正在使用
 };

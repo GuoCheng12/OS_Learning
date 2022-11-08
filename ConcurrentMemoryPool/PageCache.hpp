@@ -6,7 +6,7 @@
 #define TEST1_PAGECACHE_HPP
 
 #include "Common.hpp"
-
+#include "ObjectPool.hpp"
 // Page Cache的结构也是一个桶
 // 如果Central Cache 中的span use count等于0
 // 说明切分给thread cache中的小块内存全都归还回来，
@@ -31,7 +31,7 @@ public:
 
 private:
     SpanList _spanLists[NPAGES];
-
+    ObjectPool<Span> spanPool;
     std::unordered_map<PAGE_ID, Span *> _idSpanMap;
 
     PageCache() {}
